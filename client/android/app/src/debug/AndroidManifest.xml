@@ -9,5 +9,7 @@
         tools:targetApi="28"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+        <meta-data android:name="com.naver.maps.map.CLIENT_ID"
+        android:value="s3bi9snlcj" />
     </application>
 </manifest>
