@@ -60,7 +60,8 @@ class DevelopmentConfig(Config):
     DEBUG = True
     PRINT_SQL = True
     CARTRAVEL_ROOT_DIR = 'C:\\workspace\\cartravel\\api\\src'
-    FILE_ROOT_DIR = 'C:\\workspace\\cartravel\\fdata'
+    # FILE_ROOT_DIR = 'C:\\workspace\\cartravel\\fdata'
+    FILE_ROOT_DIR = 'D:\\fdata'
 
 
 class ProductionConfig(Config):
