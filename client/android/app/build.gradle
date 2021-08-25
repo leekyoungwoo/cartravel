@@ -81,6 +81,12 @@ project.ext.react = [
     enableHermes: false,  // clean and rebuild if changing
 ]
 
+project.ext.vectoricons = [
+        iconFontNames: [ 'FontAwesome.ttf', 'FontAwesome5_Regular.ttf',
+             'FontAwesome5_Solid.ttf', 'FontAwesome5_Brands.ttf'] // <-- add this line (1/2)
+]
+
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle" // <- add this line (2/2)
 apply from: "../../node_modules/react-native/react.gradle"
 
 /**
@@ -152,6 +158,14 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+                storeFile file(MYAPP_RELEASE_STORE_FILE)
+                storePassword MYAPP_RELEASE_STORE_PASSWORD
+                keyAlias MYAPP_RELEASE_KEY_ALIAS
+                keyPassword MYAPP_RELEASE_KEY_PASSWORD
+            } 
+        }
     }
     buildTypes {
         debug {
@@ -160,7 +174,7 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
