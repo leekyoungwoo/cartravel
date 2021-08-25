@@ -7,9 +7,9 @@ function Search({ navigation }: any) {
   const [search, setSearch] = useState('');
 
   return (
-    <View>
+    <View >
       <SearchBar
-        placeholder="Seach Here..."
+        placeholder="검색"
         onChangeText={(text?: any) => setSearch(text)}
         value={search}
         round
@@ -24,7 +24,7 @@ function Search({ navigation }: any) {
 
 const styles = StyleSheet.create({
   containerStyle: {
-    paddingHorizontal: 10,
+    // paddingHorizontal: 10,
     backgroundColor: 'white',
     borderBottomColor: 'white',
   },

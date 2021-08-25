@@ -1,56 +1,33 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   TouchableOpacity, ScrollView, View, StyleSheet, Text, Dimensions
 } from 'react-native';
 import Swiper from 'react-native-swiper'
 import { Image } from 'react-native-elements'
+import { getNewsData } from '~/store/camp';
+import { useDispatch, useSelector } from 'react-redux';
+import { fileUrl } from '~/utils/commonValues'
+
 
 function News({ navigation }: any) {
+  const dispatch = useDispatch();
+  const campData = useSelector((state: any) => state.camp.news);
+  const { sort, filter } = useSelector(
+    (state: any) => ({
+      sort: state.camp.param.sort,
+      filter: state.camp.param.filter,
+      limit:  state.camp.param.limit
+    })
+  );
 
-  const list: Array<any> = [
-    {
-      name: 'Chris Jackson',
-      avatarUrl: 'https://s.pstatic.net/static/www/mobile/edit/2021/0806/mobile_143933408119.png',
-      address: '주소',
-      startScore: 3.0,
-      count: 100
-    },
-    {
-      name: 'hi2',
-      avatarUrl: 'https://opgg-static.akamaized.net/images/lol/champion/Gangplank.png?image=c_scale,q_auto,w_140&v=1626880099',
-      address: '주소',
-      startScore: 3.0,
-      count: 100
-    },
-    {
-      name: 'hi3',
-      avatarUrl: 'https://opgg-static.akamaized.net/images/lol/champion/Gangplank.png?image=c_scale,q_auto,w_140&v=1626880099',
-      address: '주소',
-      startScore: 3.0,
-      count: 100
-    },
-    {
-      name: 'hi4',
-      avatarUrl: 'https://opgg-static.akamaized.net/images/lol/champion/Gangplank.png?image=c_scale,q_auto,w_140&v=1626880099',
-      address: '주소',
-      startScore: 3.0,
-      count: 100
-    },
-    {
-      name: 'hi5',
-      avatarUrl: 'https://s.pstatic.net/static/www/mobile/edit/2021/0806/mobile_143933408119.png',
-      address: '주소',
-      startScore: 3.0,
-      count: 100
-    },
-    {
-      name: 'hi6',
-      avatarUrl: 'https://s.pstatic.net/static/www/mobile/edit/2021/0806/mobile_143933408119.png',
-      address: '주소',
-      startScore: 3.0,
-      count: 100
-    },
-  ]
+  useEffect(() => {
+    const params: any = {
+      filter: JSON.stringify(filter),
+      sort: JSON.stringify(sort),
+      limit: 8
+    }
+    dispatch(getNewsData(params));
+  }, [])
 
   return (
     <ScrollView style={styles.firstWrapper}>
@@ -117,7 +94,7 @@ function News({ navigation }: any) {
           <TouchableOpacity style={styles.buttonWrapper}>
             <View style={styles.buttonIcon}>
             </View>
-            <Text style={styles.buttonText}>갤러리</Text>
+            <Text style={styles.buttonText}>앨범</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.buttonWrapper}>
             <View style={styles.buttonIcon}>
@@ -129,11 +106,12 @@ function News({ navigation }: any) {
       <View style={styles.newPlaceWrapper}>
         <Text style={styles.placeText}>뉴 플레이스</Text>
         <View style={styles.newPlaceWrapper2}>
-          {list.map((l, i) => (
-            <TouchableOpacity style={styles.newPlaceContainer}>
-              <Image style={styles.newPlaceImg} source={{ uri: l.avatarUrl }} />
-              <Text>{l.name}</Text>
-              <Text>{l.address}</Text>
+          {campData && campData.map((l: any, i: number) => (
+            <TouchableOpacity style={styles.newPlaceContainer} key={i}>
+              <Image style={styles.newPlaceImg} source={{ uri: `${fileUrl}campImages/${l.campNo}/thumbNail/${l.firstImageUrl}` }} />
+              <Text style={{fontSize: 13, fontWeight: '700', marginBottom: 5}}>{l.facltNm}</Text>
+              <Text style={{fontSize: 10, fontWeight: '600', marginBottom: 3}}>{l.addr1}</Text>
+              <Text style={{fontSize: 10, fontWeight: '600', marginBottom: 3}}>{l.addr2}</Text>
             </TouchableOpacity>
           ))}
         </View>

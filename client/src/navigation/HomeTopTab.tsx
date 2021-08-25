@@ -2,7 +2,7 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import React from 'react';
 import First from '~/components/standard/home/News'
-import CampingPlace from '~/components/standard/home/CampingPlace'
+import CampingAdminStack from '~/navigation/CampingAdminStack'
 import Story from '~/components/standard/home/Story'
 import Gallery from '~/components/standard/home/Gallery'
 import Talk from '~/components/standard/home/Talk'
@@ -13,11 +13,11 @@ function HomeTopTab() {
   const Tab = createMaterialTopTabNavigator();
   return (
     <Tab.Navigator
-      swipeEnabled={false}
       screenOptions={{
         tabBarActiveTintColor: "#78c8ff",
         tabBarInactiveTintColor: "black",
         tabBarIndicatorStyle: { backgroundColor: '#78c8ff' },
+        swipeEnabled: false
       }}
     >
       <Tab.Screen
@@ -28,8 +28,8 @@ function HomeTopTab() {
         }}
       />
       <Tab.Screen
-        name="CampingPlace"
-        component={CampingPlace}
+        name="CampingAdminStack"
+        component={CampingAdminStack}
         options={{
           tabBarLabel: '캠핑장',
         }}
@@ -45,7 +45,7 @@ function HomeTopTab() {
         name="Gallery"
         component={Gallery}
         options={{
-          tabBarLabel: '갤러리',
+          tabBarLabel: '앨범',
         }}
       />
       <Tab.Screen

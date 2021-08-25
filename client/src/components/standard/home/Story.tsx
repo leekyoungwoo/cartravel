@@ -6,18 +6,18 @@ function Story({ navigation }: any) {
 
   const list: Array<any> = [
     {
+      title: '산음 자연휴양림! 인생 첫 모토캠핑입니다 ',
+      avatarUrl: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMDA5MDlfMzIg%2FMDAxNTk5NjE3OTM3MjU1.7nH40TsrJnsNOzQqrpiaWf-AfdSsSl13lAC6PDIJjrog.ix37s3UBaAgMrj5SXBVWb2D5cJ59nSV3NRmfFbH69_Ig.JPEG.codud1008%2FIMG_7469.jpg&type=a340',
       name: 'Chris Jackson',
-      avatarUrl: 'https://opgg-static.akamaized.net/images/lol/champion/Gangplank.png?image=c_scale,q_auto,w_140&v=1626880099',
-      address: '주소',
       startScore: 3.0,
-      count: 100
+      addr: 100
     },
     {
-      name: 'hi2',
-      avatarUrl: 'https://opgg-static.akamaized.net/images/lol/champion/Gangplank.png?image=c_scale,q_auto,w_140&v=1626880099',
-      address: '주소',
+      title: '더위 피해서 캠핑왔는데, 여기도 .....',
+      avatarUrl: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTA2MjVfMTky%2FMDAxNjI0NjAzNzQ4NTgw.RGLqU1JSHu7MDAUhugThqkHdE7EcGulRWJxlfZwHN3cg.NxiMU6dUGBzljO-8qoQP-5zMyiN3QC-l-liZs4MLq4Qg.JPEG.d_lossom%2FIMG_9328.jpg&type=a340',
+      name: '이경우',
       startScore: 3.0,
-      count: 100
+      addr: 100
     },
   ]
 
@@ -25,10 +25,10 @@ function Story({ navigation }: any) {
     <ScrollView style={styles.firstWrapper}>
       <View style={styles.newPlaceWrapper}>
         {list.map((l, i) => (
-          <TouchableOpacity style={styles.newPlaceContainer}>
+          <TouchableOpacity style={styles.newPlaceContainer} key={i}>
             <Image style={styles.newPlaceAvatar} source={{ uri: l.avatarUrl }}/>
-            <Text>{l.name}</Text>
-            <Text>{l.address}</Text>
+            <Text style={{textAlign: 'center', fontSize: 14, fontWeight: '700'}}>{l.title}</Text>
+            <Text style={{textAlign: 'center', fontSize: 12}}>{l.name}</Text>
           </TouchableOpacity>
         ))}
       </View>

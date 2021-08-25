@@ -1,61 +1,184 @@
-import {
-  Button, Text, View
-} from 'react-native';
-import React, {useState, useEffect} from 'react';
-import SearchTopBar from '~/components/common/Search'
-import NaverMapView, { Circle, Marker, Path, Polyline, Polygon } from "react-native-nmap"
-import Geolocation from 'react-native-geolocation-service';
+import React, { useEffect, useRef, useState } from 'react';
+import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
+import NaverMapView, { Marker } from "react-native-nmap";
+import { useDispatch, useSelector } from 'react-redux';
+import CampingList from '~/components/branch/camping/CampingList';
+import BottomDrawer from '~/components/common/BottomDrawer';
+import SearchTopBar from '~/components/common/Search';
+import { getCampList } from '~/store/camp';
+
 
 function Map({ navigation }: any) {
-  const [location, setLocation] = useState<any>(undefined);
-  
+  const height = Dimensions.get('window').height
+  const ref = useRef<any>(null);
+  const dispatch = useDispatch();
+  const [clickId, setClickId] = useState<any>({ campNo: 0 });
+  const [clickMap, setClickMap] = useState<boolean>(false);
+  const [visible, setVisible] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [zoomType, setZoomType] = useState<number>(2);
+  const { sort, filter } = useSelector(
+    (state: any) => ({
+      sort: state.camp.param.sort,
+      filter: state.camp.param.filter,
+    })
+  );
+  const respData = useSelector((state: any) => state.camp.data);
+
   useEffect(() => {
-    Geolocation.getCurrentPosition(
-      position => {
-        const {latitude, longitude} = position.coords;
-        setLocation({latitude, longitude});
-      },
-      error => {
-        console.log(error.code, error.message);
-      },
-      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-    );
+    ref.current.setLocationTrackingMode(2)
   }, []);
 
-  const P0 = {latitude: 37.564362, longitude: 126.977011};
-  const P1 = {latitude: 37.565051, longitude: 126.978567};
-  const P2 = {latitude: 37.565383, longitude: 126.976292};
+  // 지도 화면 전환
+  const changeCamera = async (e: any) => {
+    const zoom = e.zoom < 9 ? 0 : e.zoom < 10 ? 1 : 2
+
+    if (!loading) {
+      if (zoomType !== zoom) setLoading(true)
+
+      const latitude: Array<any> = []
+      const longitude: Array<any> = []
+      e.coveringRegion.map((place: any, i: number) => {
+        latitude.push(place.latitude)
+        longitude.push(place.longitude)
+      })
+
+      const params: any = {
+        maxXvalue: Math.max.apply(null, longitude),
+        maxYvalue: Math.max.apply(null, latitude),
+        minXvalue: Math.min.apply(null, longitude),
+        minYvalue: Math.min.apply(null, latitude),
+        offset: 0,
+        limit: 0,
+        zoom: e.zoom
+      }
+
+      setZoomType(zoom)
+      setClickId({ campNo: 0 })
+      setVisible(false)
+
+      await dispatch(getCampList(params));
+      setLoading(false)
+    }
+  }
+
+  // 캠핑마커 클릭
+  const onClickMarker = (data: any) => {
+    setClickId(data)
+    setVisible(true)
+  }
+
+  // console.log(respData)
   return (
     <View>
       <SearchTopBar />
-      <NaverMapView style={{ width: '100%', height: '100%' }}
+      <NaverMapView
+        style={{ width: '100%', height: height - 130 }}
+        ref={ref}
         showsMyLocationButton={true}
         zoomControl={true}
-        nightMode={false}
-        scrollGesturesEnabled={true}
-        zoomGesturesEnabled={true}
-        tiltGesturesEnabled={true}
-        rotateGesturesEnabled={true}
-        stopGesturesEnabled={true}
-        useTextureView={true}
-        // center={Object.assign(location ? location : P0, { zoom: 12 })}
-        center={Object.assign(P0, { zoom: 12 })}
+        scaleBar={false}
         minZoomLevel={6}
         maxZoomLevel={18}
-        // onTouch={(e: any) => console.warn('onTouch', JSON.stringify(e.nativeEvent))}
-        onCameraChange={e => console.warn('onCameraChange', JSON.stringify(e))}
-        // onMapClick={e => console.warn('onMapClick', JSON.stringify(e))}>
+        onCameraChange={e => changeCamera(e)}
+        useTextureView={true}
+        onMapClick={e => {
+          setClickId({ campNo: 0 })
+          setVisible(false)
+          setClickMap(!clickMap)
+        }}
       >
-        {/* <Marker coordinate={P0} onClick={() => console.warn('onClick! p0')} />
-        <Marker coordinate={P1} pinColor="blue" onClick={() => console.warn('onClick! p1')} />
-        <Marker coordinate={P2} pinColor="red" onClick={() => console.warn('onClick! p2')} />
-        <Path coordinates={[P0, P1]} onClick={() => console.warn('onClick! path')} width={10} />
-        <Polyline coordinates={[P1, P2]} onClick={() => console.warn('onClick! polyline')} />
-        <Circle coordinate={P0} color={"rgba(255,0,0,0.3)"} radius={200} onClick={() => console.warn('onClick! circle')} />
-        <Polygon coordinates={[P0, P1, P2]} color={`rgba(0, 0, 0, 0.5)`} onClick={() => console.warn('onClick! polygon')} /> */}
+
+        {!loading && respData && respData.map((d: any, i: number) => {
+          return (
+            <View key={i}>
+              {zoomType === 0 ? (
+                <Marker
+                  coordinate={{ latitude: d.mapY, longitude: d.mapX }}
+                  image={require('~/images/transparency.png')}
+                  // iconPerspectiveEnabled={false}
+                  // isHideCollidedSymbols={false}
+                  // isHideCollidedMarkers={false}
+                  // isHideCollidedCaptions={false}
+                  hidden={true}
+                  caption={{
+                    text: d.doNm ? `${d.doNm} ${d.campCount}개` : '',
+                    textSize: 14,
+                    color: '#78c8ff',
+                    haloColor: '#ededed'
+                  }}
+                />
+              ) : zoomType === 1 ? (
+                <Marker
+                  coordinate={{ latitude: d.mapY, longitude: d.mapX }}
+                  image={require('~/images/transparency.png')}
+                  // iconPerspectiveEnabled={false}
+                  // isHideCollidedSymbols={false}
+                  // isHideCollidedMarkers={false}
+                  // isHideCollidedCaptions={false}
+                  hidden={true}
+                  caption={{
+                    text: d.sigunguNm ? `${d.sigunguNm} ${d.campCount}개` : '',
+                    textSize: 14,
+                    color: '#78c8ff',
+                    haloColor: '#ededed'
+                  }}
+                />
+              ) : (
+                <Marker
+                  coordinate={{ latitude: d.mapY, longitude: d.mapX }}
+                  image={clickId.campNo === d.campNo ? require('~/images/pin.png') : require('~/images/pin_small.png')}
+                  onClick={() => onClickMarker(d)}
+                  // iconPerspectiveEnabled={false}
+                  // isHideCollidedSymbols={false}
+                  // isHideCollidedMarkers={false}
+                  // isHideCollidedCaptions={false}
+                  // hidden={true}
+                  {...(clickId.campNo === d.campNo && {
+                    caption: {
+                      text: d.facltNm,
+                      textSize: 10,
+                      color: '#78c8ff',
+                      haloColor: '#ededed'
+                    }
+                  })
+                  }
+                />
+              )}
+            </View>
+          )
+        })}
       </NaverMapView>
+
+      {zoomType === 2 && (
+
+        <BottomDrawer
+          clickMarker={visible}
+          clickMap={clickMap}
+          onDrawerStateChange={(e) => console.log(e)}
+        >
+          <View style={styles.bottomDrawerArea}>
+            <View style={styles.bottomDrawerBar} />
+          </View>
+          <CampingList data={Object.keys(clickId).length > 1 ? [clickId] : respData} />
+        </BottomDrawer>
+      )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  bottomDrawerArea: {
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  bottomDrawerBar: {
+    backgroundColor: 'grey',
+    height: 3,
+    width: 35,
+    borderRadius: 17
+  },
+})
 
 export default Map;
