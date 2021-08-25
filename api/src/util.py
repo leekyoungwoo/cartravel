@@ -228,10 +228,10 @@ def make_sort_query(sort_list, target_list, default):
                 if sort['field'] in target_list:
                     sort_sql += __make_sort_sql(str_to_snakecase(sort['field']), sort['order'].upper(), True)
                 else:
-                    sort_sql = '{} ASC\n'.format(default)
+                    sort_sql = '{} ASC NULLS FIRST\n'.format(default)
                     break
     else:
-        sort_sql = '{} ASC\n'.format(default)
+        sort_sql = '{} ASC NULLS FIRST\n'.format(default)
 
     return sort_sql
 
@@ -461,6 +461,12 @@ def use_p():
     except Exception:
         p = {}
 
+    for k in p:
+        if p[k] not in [None, '']:
+            p[k] = guess_type(p[k])
+        else:
+            pass
+
     return p
 
 
@@ -541,13 +547,14 @@ def semiflatten(multi):
         return multi
 
 
-def guess_type(s):
+def guess_type(value):
     try:
-        value = ast.literal_eval(s)
-    except ValueError:
-        return str
-    else:
-        return type(value)
+        nullable_value = value.replace('null', '\"\"') if isinstance(value, str) else value
+        value = ast.literal_eval(nullable_value)
+    except Exception:
+        return value
+
+    return value
 
 
 # n진법 변환

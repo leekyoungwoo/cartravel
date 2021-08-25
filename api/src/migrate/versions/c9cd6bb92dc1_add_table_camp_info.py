@@ -24,34 +24,34 @@ def upgrade():
     if not fix_process:
         db.execute("""\
 CREATE TABLE camp_info (
-    camp_no serial NOT NULL, -- 넘버
-    addr1 text, -- 주소1
-    addr2 text, -- 주소2
-    allar int, -- ?
-    animal_cmg_cl text, -- 반려동물 정보
-    auto_site_co int, -- ? (오토캠핑장 사이트 크기)
-    bizrno text, -- ?
-    brazier_cl text, -- 화로대 방식
-    carav_acmpny_at text, -- ? (카라반 관련?)
-    carav_inner_fclty text, -- 카라반 내부시설
-    carav_site_co int, -- ? (카라반 사이트 크기)
-    cltur_event_at text, -- ?
-    content_id int, -- GO캠핑 넘버
-    createdtime timestamp with time zone DEFAULT now(), -- 등록일
-    do_nm text, -- 행정구역 8도
-    exprn_progrm_at text, -- ?
-    extshr_co int, -- ?
-    faclt_div_nm text, -- 운영기관 (민간, 지자체 등)
-    faclt_nm text, -- 캠핑장 이름
-    feature_nm text, -- ?
-    fire_sensor_co int, -- ?
-    first_image_url text, -- 썸네일 이미지
-    frprvt_sand_co int, -- ?
-    frprvt_wrpp_co int, -- ?
-    glamp_site_co int, -- 글램핑 사이즈
-    gnrl_site_co int, -- 일반 야영장 사이즈
-    homepage text, -- 캠핑장 홈페이지
-    induty text, -- 캠핑장 유형
+  camp_no serial NOT NULL, -- 넘버
+  addr1 text, -- 주소1
+  addr2 text, -- 주소2
+  allar int, -- ?
+  animal_cmg_cl text, -- 반려동물 정보
+  auto_site_co int, -- ? (오토캠핑장 사이트 크기)
+  bizrno text, -- ?
+  brazier_cl text, -- 화로대 방식
+  carav_acmpny_at text, -- ? (카라반 관련?)
+  carav_inner_fclty text, -- 카라반 내부시설
+  carav_site_co int, -- ? (카라반 사이트 크기)
+  cltur_event_at text, -- ?
+  content_id int, -- GO캠핑 넘버
+  createdtime timestamp with time zone DEFAULT now(), -- 등록일
+  do_nm text, -- 행정구역 8도
+  exprn_progrm_at text, -- ?
+  extshr_co int, -- ?
+  faclt_div_nm text, -- 운영기관 (민간, 지자체 등)
+  faclt_nm text, -- 캠핑장 이름
+  feature_nm text, -- ?
+  fire_sensor_co int, -- ?
+  first_image_url text, -- 썸네일 이미지
+  frprvt_sand_co int, -- ?
+  frprvt_wrpp_co int, -- ?
+  glamp_site_co int, -- 글램핑 사이즈
+  gnrl_site_co int, -- 일반 야영장 사이즈
+  homepage text, -- 캠핑장 홈페이지
+  induty text, -- 캠핑장 유형
 	indvdl_carav_site_co int, -- ?
 	insrnc_at text, -- ?
 	intro text, -- 소개
@@ -60,8 +60,8 @@ CREATE TABLE camp_info (
 	manage_nmpr int, -- ?
 	manage_sttus text, -- 운영 유무
 	mange_div_nm text, -- 위탁or직영
-	map_x text, -- 위치 x좌표
-	map_y text, -- 위치 y좌표
+	map_x NUMERIC, -- 위치 x좌표
+	map_y NUMERIC, -- 위치 y좌표
 	modifiedtime timestamp with time zone DEFAULT now(), -- 수정일
 	oper_de_cl text, -- 오픈 주중,주말
 	oper_pd_cl text, -- 오픈 계절

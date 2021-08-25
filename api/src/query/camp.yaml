@@ -1,0 +1,100 @@
+캠핑장 조회: |
+  SELECT row_number() OVER (
+    ORDER BY {{ sort_sql | sqlsafe }}
+        ) AS rnum
+    ,*
+  FROM (
+    SELECT camp_no,
+      addr1,
+      addr2,
+      faclt_nm,
+      content_id,
+      map_x,
+      map_y,
+      intro,
+      line_intro,
+      first_image_url,
+      (string_to_array(induty, ','))[1] AS type,
+      date_part('epoch', createdtime) AS createdtime
+    FROM camp_info
+    WHERE TRUE
+    {% if sigungu_name %}
+      AND sigungu_nm = {{ sigungu_name }}
+    {% endif %}
+    {% if max_xvalue %}
+      AND map_x < {{ max_xvalue }}
+    {% endif %}
+    {% if min_xvalue %}
+      AND map_x > {{ min_xvalue }}
+    {% endif %}
+    {% if max_yvalue %}
+      AND map_y < {{ max_yvalue }}
+    {% endif %}
+    {% if min_yvalue %}
+      AND map_y > {{ min_yvalue }}
+    {% endif %}
+  ) CI
+  ORDER BY rnum DESC
+  {% if offset %} OFFSET {{ offset }} {% endif %}
+  {% if limit %} LIMIT {{ limit }}  {% endif %}
+
+행정구역별 조회: |
+  SELECT row_number() OVER (
+    ORDER BY do_nm
+        ) AS rnum
+    ,*
+  FROM (
+    SELECT do_nm,
+      count(camp_no) AS camp_count,
+      avg(map_x) AS map_x,
+      avg(map_y) AS map_y
+    FROM camp_info
+    WHERE do_nm IS NOT NULL
+    GROUP BY 1
+  ) CI
+  WHERE TRUE
+  {% if max_xvalue %}
+    AND map_x < {{ max_xvalue }}
+  {% endif %}
+  {% if min_xvalue %}
+    AND map_x > {{ min_xvalue }}
+  {% endif %}
+  {% if max_yvalue %}
+    AND map_y < {{ max_yvalue }}
+  {% endif %}
+  {% if min_yvalue %}
+    AND map_y > {{ min_yvalue }}
+  {% endif %}
+
+시군구별 조회: |
+  SELECT row_number() OVER (
+    ORDER BY sigungu_nm
+        ) AS rnum
+    ,*
+  FROM (
+    SELECT sigungu_nm,
+      do_nm,
+      count(camp_no) AS camp_count,
+      avg(map_x) AS map_x,
+      avg(map_y) AS map_y
+    FROM camp_info
+    WHERE sigungu_nm IS NOT NULL
+      {% if do_name %}
+        AND do_nm = {{ do_name }}
+      {% endif %}
+    GROUP BY 1, 2
+  ) CI
+  WHERE TRUE
+  {% if max_xvalue %}
+    AND map_x < {{ max_xvalue }}
+  {% endif %}
+  {% if min_xvalue %}
+    AND map_x > {{ min_xvalue }}
+  {% endif %}
+  {% if max_yvalue %}
+    AND map_y < {{ max_yvalue }}
+  {% endif %}
+  {% if min_yvalue %}
+    AND map_y > {{ min_yvalue }}
+  {% endif %}
+

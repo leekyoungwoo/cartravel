@@ -6,7 +6,7 @@ import os
 import sys
 
 from flasgger import Swagger
-from flask import Flask, send_from_directory, request
+from flask import Flask, send_from_directory, request, Response, render_template
 from flask_babel import Babel
 from flask_cors import CORS
 from flask_restful import Api
@@ -35,7 +35,8 @@ app.logger.addHandler(stream_handler)
 
 babel = Babel(app)
 
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+cors = CORS(app, resources={r"/api/*": {"origins": "*"},
+                            r"/exec/*": {"origins": "*"}})
 
 api = Api(app)
 
@@ -59,6 +60,11 @@ def get_locale():
 def index_page():
     return 'Welcome To MudFix RESTful web service.' \
            'See doc /api/v1/docs'
+
+
+@app.route('/test')
+def test():
+    return Response(render_template('./inform.html'))
 
 
 # DEVELOP 모드일때 추가 url 라우팅
