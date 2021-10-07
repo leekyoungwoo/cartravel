@@ -14,7 +14,7 @@ function CapningSigungu({ navigation }: any) {
             key={i} 
             bottomDivider
             onPress={() => {
-              navigation.navigate('CampList', { sigunguNm: item.sigunguNm })
+              navigation.push('CampList', { sigunguNm: item.sigunguNm })
             }}
           >
           <ListItem.Content>

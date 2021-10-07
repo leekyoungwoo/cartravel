@@ -1,7 +1,7 @@
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import React from 'react';
-import First from '~/components/standard/home/News'
+import News from '~/components/standard/home/News'
 import CampingAdminStack from '~/navigation/CampingAdminStack'
 import Story from '~/components/standard/home/Story'
 import Gallery from '~/components/standard/home/Gallery'
@@ -22,7 +22,7 @@ function HomeTopTab() {
     >
       <Tab.Screen
         name="News"
-        component={First}
+        component={News}
         options={{
           tabBarLabel: 'NEWS',
         }}

@@ -112,6 +112,7 @@ ALTER TABLE user_gallery
   ADD CONSTRAINT user_gallery_user_no_fkey FOREIGN KEY (user_no)
   REFERENCES user_info (user_no)
   ON UPDATE NO ACTION
+  
   ON DELETE NO ACTION;
   
  
@@ -120,6 +121,7 @@ comment_no serial NOT NULL, --NO
 story_no int, -- NO
 parent_no int, -- 부모 넘버 빈값이면 상위
 create_user int, -- 유저
+is_like SMALLINT, -- 좋아요
 comment_content TEXT, -- 댓글내용
 reg_date TIMESTAMPTZ DEFAULT now()
 );

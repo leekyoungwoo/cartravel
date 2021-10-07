@@ -59,7 +59,12 @@ function News({ navigation }: any) {
       </View>
       <View style={styles.buttonContainerWrapper}>
         <View style={styles.topButtonContainer}>
-          <TouchableOpacity style={styles.buttonWrapper}>
+          <TouchableOpacity 
+            style={styles.buttonWrapper}
+            onPress={() => {
+              navigation.navigate('CampingAdminStack')
+            }}
+          >
             <View style={styles.buttonIcon}>
             </View>
             <Text style={styles.buttonText}>캠핑장</Text>
