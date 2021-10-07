@@ -110,7 +110,6 @@ if __name__ == '__main__':
                     if os.path.isfile(filename):
                         extra_files.append(filename)
                         
-    # 디버깅 환경이나 테스트 환경에서는 FileLogging을 사용하지 않는다.
     if not app.config['DEBUG']:
         file_handler = logging.FileHandler(
             app.config['LOG_FILE_PATH'])

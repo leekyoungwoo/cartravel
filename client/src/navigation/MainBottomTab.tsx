@@ -12,8 +12,9 @@ import Shop from '~/components/standard/Shop';
 import Map from '~/components/standard/Map';
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
+import MyCamping from '~/components/standard/MyCamping';
 
-function MainBottomTab() {
+function MainBottomTab({ navigation }: any) {
   const Tab = createBottomTabNavigator();
   return (
     <Tab.Navigator
@@ -58,7 +59,7 @@ function MainBottomTab() {
       />
       <Tab.Screen
         name="MyCamping"
-        component={Home}
+        component={MyCamping}
         options={{
           tabBarLabel: '나의 캠핑',
           headerShown: false,
