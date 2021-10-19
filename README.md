@@ -23,9 +23,9 @@ python main.py
 - Framework
 - 참고 사이트: [http://flask.pocoo.org/](http://flask.pocoo.org/)
 
-##### SQLAlchemy
+##### ReactNative
 - Database ORM
-- 참고 사이트: [https://docs.sqlalchemy.org/en/12/](https://docs.sqlalchemy.org/en/12/)
+- 참고 사이트: [https://reactnative.dev/](https://reactnative.dev/)
 
 
 ## 3. 디렉토리 기본 구조
